@@ -45,6 +45,7 @@ Give this snippet to your software team. They can adapt it to whatever language 
 
 ```python
 import requests
+import time
 
 # 1. The URL of your deployed API
 api_url = "https://my-qr-api.onrender.com/generate-qr"
@@ -64,9 +65,12 @@ response = requests.post(api_url, json=my_data)
 
 # 4. Save the QR Code image
 if response.status_code == 200:
-    with open("label.png", "wb") as f:
+    # Use Batch ID + Timestamp to ensure unique filenames
+    timestamp = int(time.time())
+    filename = f"label_{my_data['Batch_ID']}_{timestamp}.png"
+    with open(filename, "wb") as f:
         f.write(response.content)
-    print("Success! Label saved as label.png")
+    print(f"Success! Label saved as {filename}")
 else:
     print("Error:", response.text)
 ```

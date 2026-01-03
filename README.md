@@ -2,6 +2,15 @@
 
 This is a FastAPI-based API to generate QR codes for manufacturing batches.
 
+## How It Works
+This API is **stateless**. This means:
+1.  You send data (e.g., Batch ID, Date).
+2.  The API embeds this data directly into a **unique URL** (e.g., `.../view?batch_id=123`).
+3.  The API generates a **new QR code** for that specific URL.
+4.  When scanned, the URL opens and displays the data embedded in it.
+
+**Every time you send different data, you get a different QR code.**
+
 ## Setup
 
 1.  Install dependencies:

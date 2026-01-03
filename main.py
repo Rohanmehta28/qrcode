@@ -6,6 +6,7 @@ from typing import Dict, Any
 import qrcode
 from io import BytesIO
 import urllib.parse
+import uuid
 
 app = FastAPI(
     title="QR Code Generator API",
@@ -32,6 +33,9 @@ async def view_batch(request: Request):
     # Extract all query parameters into a dictionary
     data = dict(request.query_params)
     
+    # Remove the unique identifier used for QR uniqueness
+    data.pop('_uid', None)
+    
     return templates.TemplateResponse(
         "view_batch.html",
         {
@@ -52,6 +56,10 @@ async def generate_qr(request: Request, details: Dict[str, Any]):
         
         # Convert all values to strings for the query string
         params = {k: str(v) for k, v in details.items()}
+        
+        # Add a unique identifier to ensure the URL (and thus the QR code) is unique
+        # even if the data is identical.
+        params['_uid'] = str(uuid.uuid4())
             
         query_string = urllib.parse.urlencode(params)
         view_url = f"{base_url}/view?{query_string}"
